@@ -1,0 +1,59 @@
+name: MDJ Android Build
+
+# First goal: produce a debug APK of the MentraOS mobile app from our fork,
+# in free cloud CI. Uses the committed Firebase config + the .env.example
+# dummy keys (enough for a debug build; on-device map won't render, which we
+# don't need). Once this builds green, we rebrand to MDJ + embed the travel UI.
+
+on:
+  workflow_dispatch: {}
+  push:
+    paths:
+      - '.github/workflows/mdj-android.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Provide .env (dummy keys are fine for a debug build)
+        working-directory: mobile
+        run: cp .env.example .env
+
+      - name: Install JS deps
+        working-directory: mobile
+        run: bun install
+
+      - name: Expo prebuild (Android)
+        working-directory: mobile
+        run: npx expo prebuild --platform android --no-install
+
+      - name: Build debug APK
+        working-directory: mobile/android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: MDJ-android-debug-apk
+          path: mobile/android/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
