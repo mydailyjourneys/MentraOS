@@ -1382,7 +1382,10 @@ class DeviceManager {
      */
     fun sendOtaStart(otaVersionUrl: String? = null) {
         Bridge.log("MAN: 📱 Sending OTA start command to glasses")
-        (sgc as? MentraLive)?.sendOtaStart(otaVersionUrl)
+        // MDJ fork: MentraLive.sendOtaStart() takes no args on this branch;
+        // drop otaVersionUrl to fix the upstream compile mismatch (OTA is
+        // unused by the MDJ travel app).
+        (sgc as? MentraLive)?.sendOtaStart()
     }
 
     fun sendOtaQueryStatus() {
