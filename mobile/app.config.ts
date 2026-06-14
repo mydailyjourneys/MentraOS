@@ -4,7 +4,7 @@ import {getBuildNumber} from "./scripts/build-number.mjs"
 
 const VARIANTS = {
   default: {
-    appName: "Mentra",
+    appName: "MDJ Travel Guide",
     packageName: "com.mentra.mentra",
     includeFirebase: true,
     googleServicesFile: "./google-services.json",
