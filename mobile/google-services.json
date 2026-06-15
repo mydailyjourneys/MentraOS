@@ -1,36 +1,26 @@
 {
   "project_info": {
-    "project_number": "628999331901",
-    "project_id": "mentraos",
-    "storage_bucket": "mentraos.firebasestorage.app"
+    "project_number": "22200145135",
+    "project_id": "travel-app-14151595-959e0",
+    "storage_bucket": "travel-app-14151595-959e0.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:628999331901:android:24aba2277f877681328a54",
+        "mobilesdk_app_id": "1:22200145135:android:fd53300f0ce5faa431371a",
         "android_client_info": {
           "package_name": "com.mentra.mentra"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "628999331901-2adet2sssh3r6ijoab2lk270r0gm0g6p.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDiVR-o352o2ap9oTZj1apM2c9heu_W8OI"
+          "current_key": "AIzaSyCQrCqOROvxV1a8Trappq1aCtl53x9lXfg"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "628999331901-2adet2sssh3r6ijoab2lk270r0gm0g6p.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

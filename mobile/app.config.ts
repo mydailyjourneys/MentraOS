@@ -113,6 +113,7 @@ module.exports = ({config}: ConfigContext): Partial<ExpoConfig> => {
         "ACCESS_NETWORK_STATE",
         "CHANGE_WIFI_STATE",
         "CHANGE_NETWORK_STATE",
+        "POST_NOTIFICATIONS",
       ],
       // The Google Navigation SDK manifest merges in ACCESS_BACKGROUND_LOCATION,
       // but navigation runs in a location foreground service and works with
@@ -347,6 +348,12 @@ module.exports = ({config}: ConfigContext): Partial<ExpoConfig> => {
         },
       ],
       ...(variant.includeFirebase ? ["@react-native-firebase/app"] : []),
+      [
+        "expo-notifications",
+        {
+          color: "#EC700B",
+        },
+      ],
       "expo-audio",
       [
         "expo-video",

@@ -5,14 +5,17 @@
  * strip keeps the web header out from under the status bar / camera cutout
  * so the title is never covered.
  */
-import {useRef, useState, useCallback} from "react"
+import {useRef, useState, useCallback, useEffect} from "react"
 import {View, ActivityIndicator, BackHandler, Platform, StatusBar} from "react-native"
 import {WebView} from "react-native-webview"
 import {SafeAreaView} from "react-native-safe-area-context"
 import {useFocusEffect} from "expo-router"
+import {registerMdjPush, addMdjPushTapListener} from "@/effects/mdjPush"
 
 // Test trip for now; production will resolve the logged-in client's own trip.
-const MDJ_APP_URL = "https://app.mydailyjourneys.com/?trip=test-vietnam"
+const MDJ_TRIP_ID = "test-vietnam"
+const MDJ_BACKEND = "https://app.mydailyjourneys.com"
+const MDJ_APP_URL = `${MDJ_BACKEND}/?trip=${MDJ_TRIP_ID}`
 
 // Dark strip behind the status bar (time / battery / camera cutout) so the
 // app content starts cleanly below it.
@@ -36,6 +39,17 @@ export default function MdjTravelScreen() {
       return () => sub.remove()
     }, [canGoBack]),
   )
+
+  // Register for native push (Android FCM) on mount, and route notification
+  // taps into the WebView (deep-link to the rec / trip the push carried).
+  useEffect(() => {
+    registerMdjPush(MDJ_TRIP_ID)
+    const sub = addMdjPushTapListener((url) => {
+      const full = url.startsWith("http") ? url : `${MDJ_BACKEND}${url}`
+      webRef.current?.injectJavaScript(`window.location.href=${JSON.stringify(full)};true;`)
+    })
+    return () => sub.remove()
+  }, [])
 
   return (
     <SafeAreaView edges={["top"]} style={{flex: 1, backgroundColor: STATUS_BAR_BG}}>
