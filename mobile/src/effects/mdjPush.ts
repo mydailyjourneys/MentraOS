@@ -11,7 +11,7 @@
  *   body { token, tripId, timezone, label }
  */
 import * as Notifications from "expo-notifications"
-import {Platform} from "react-native"
+import {Platform, Linking} from "react-native"
 
 const BACKEND = "https://app.mydailyjourneys.com"
 
@@ -82,7 +82,18 @@ export async function registerMdjPush(tripId: string): Promise<string | null> {
  */
 export function addMdjPushTapListener(onUrl: (url: string) => void) {
   return Notifications.addNotificationResponseReceivedListener((resp) => {
-    const data = resp.notification.request.content.data as {url?: string} | undefined
+    const data = resp.notification.request.content.data as {url?: string; place?: string} | undefined
+    const place = data?.place ? String(data.place) : ""
+    if (place) {
+      const q = encodeURIComponent(place)
+      // Open the location in the device's default maps app. The geo: scheme
+      // routes to the user's default maps handler; fall back to a Google Maps
+      // web URL (opens the Maps app if installed, else the browser).
+      Linking.openURL(`geo:0,0?q=${q}`).catch(() => {
+        Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${q}`).catch(() => {})
+      })
+      return
+    }
     if (data?.url) onUrl(String(data.url))
   })
 }
