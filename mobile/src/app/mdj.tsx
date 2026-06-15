@@ -17,7 +17,9 @@ import {WebView} from "react-native-webview"
 import {useFocusEffect} from "expo-router"
 import {useCallback} from "react"
 
-const MDJ_APP_URL = "https://app.mydailyjourneys.com"
+// Test trip for now; the production version will resolve the logged-in
+// client's own trip after Supabase login instead of a hard-coded id.
+const MDJ_APP_URL = "https://app.mydailyjourneys.com/?trip=test-vietnam"
 
 export default function MdjTravelScreen() {
   const webRef = useRef<WebView>(null)
