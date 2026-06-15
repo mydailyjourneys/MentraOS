@@ -45,6 +45,11 @@ export default function MdjTravelScreen() {
           ref={webRef}
           source={{uri: MDJ_APP_URL}}
           style={{flex: 1}}
+          // Pose as a normal Chrome browser so Google OAuth doesn't reject the
+          // sign-in with "disallowed_useragent" (Google blocks embedded WebViews).
+          userAgent="Mozilla/5.0 (Linux; Android 14; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
+          thirdPartyCookiesEnabled
+          sharedCookiesEnabled
           javaScriptEnabled
           domStorageEnabled
           allowsInlineMediaPlayback
