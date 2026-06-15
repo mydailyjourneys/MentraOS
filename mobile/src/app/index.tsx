@@ -120,7 +120,10 @@ export default function InitScreen() {
 
     await new Promise((resolve) => setTimeout(resolve, NAVIGATION_DELAY))
     setAnimationDelayed()
-    clearHistoryAndGoHome({transition: "none"})
+    // MDJ: after login/onboarding, land on the MDJ travel app (WebView)
+    // instead of the Mentra glasses home. The glasses engine still runs
+    // underneath; pairing/management remains reachable via the app's routes.
+    replace("/mdj", {transition: "fade"})
   }, [user, getPendingRoute, processUrl, clearHistoryAndGoHome, replace, replaceAll, setPendingRoute, setAnimation])
 
   const checkLoggedIn = async (): Promise<void> => {
