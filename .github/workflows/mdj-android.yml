@@ -66,3 +66,5 @@ jobs:
           name: MDJ-android-debug-apk
           path: mobile/android/app/build/outputs/apk/release/*.apk
           if-no-files-found: error
+
+# build trigger: MDJ native push (FCM) - 2026-06-15T22:07:16.8826022+03:00
