@@ -12,6 +12,8 @@ import {SafeAreaView} from "react-native-safe-area-context"
 import {useFocusEffect} from "expo-router"
 import {registerMdjPush, addMdjPushTapListener} from "@/effects/mdjPush"
 import {useAppStatusStore, useStart} from "@mentra/island"
+import BluetoothSdk from "@mentra/bluetooth-sdk"
+import {useGlassesStore, isGlassesConnected} from "@/stores/glasses"
 
 // The MDJ voice guide MiniApp — auto-started in the background so "היי מאיה"
 // and story narration work while the traveler is in this WebView, without
@@ -37,6 +39,10 @@ export default function MdjTravelScreen() {
   const apps = useAppStatusStore((s: any) => s.apps)
   const startApplet = useStart()
   const guideStartedRef = useRef(false)
+
+  // Live glasses connection state, so we can auto-connect the paired glasses.
+  const glassesConnection = useGlassesStore((s: any) => s.connection)
+  const connectTriedRef = useRef(false)
 
   useFocusEffect(
     useCallback(() => {
@@ -79,6 +85,33 @@ export default function MdjTravelScreen() {
       }
     }
   }, [apps, startApplet])
+
+  // Auto-connect the paired glasses on launch. The fork skips Mentra's
+  // connection screen, so without this the glasses never link to the app
+  // and the guide gets no session. Give the core a few seconds to connect
+  // on its own first; if still not connected, trigger connectDefault() once.
+  useEffect(() => {
+    if (connectTriedRef.current) return
+    if (glassesConnection && isGlassesConnected(glassesConnection)) {
+      connectTriedRef.current = true
+      return
+    }
+    const t = setTimeout(() => {
+      if (connectTriedRef.current) return
+      const conn = useGlassesStore.getState().connection
+      if (conn && isGlassesConnected(conn)) {
+        connectTriedRef.current = true
+        return
+      }
+      connectTriedRef.current = true
+      try {
+        BluetoothSdk.connectDefault().catch((e: any) => console.warn("[mdj] connectDefault failed:", e))
+      } catch (e) {
+        console.warn("[mdj] connectDefault threw:", e)
+      }
+    }, 4000)
+    return () => clearTimeout(t)
+  }, [glassesConnection])
 
   return (
     <SafeAreaView edges={["top"]} style={{flex: 1, backgroundColor: STATUS_BAR_BG}}>
