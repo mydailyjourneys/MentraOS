@@ -11,6 +11,12 @@ import {WebView} from "react-native-webview"
 import {SafeAreaView} from "react-native-safe-area-context"
 import {useFocusEffect} from "expo-router"
 import {registerMdjPush, addMdjPushTapListener} from "@/effects/mdjPush"
+import {useAppStatusStore, useStart} from "@mentra/island"
+
+// The MDJ voice guide MiniApp — auto-started in the background so "היי מאיה"
+// and story narration work while the traveler is in this WebView, without
+// the user having to open the Mentra app-management screen first.
+const MDJ_GUIDE_PKG = "com.mydailyjourneys.guide"
 
 // Test trip for now; production will resolve the logged-in client's own trip.
 const MDJ_TRIP_ID = "test-vietnam"
@@ -25,6 +31,12 @@ export default function MdjTravelScreen() {
   const webRef = useRef<WebView>(null)
   const [loading, setLoading] = useState(true)
   const [canGoBack, setCanGoBack] = useState(false)
+
+  // Live list of the user's MentraOS apps + the start function, so we can
+  // auto-start the guide MiniApp in the background.
+  const apps = useAppStatusStore((s: any) => s.apps)
+  const startApplet = useStart()
+  const guideStartedRef = useRef(false)
 
   useFocusEffect(
     useCallback(() => {
@@ -50,6 +62,23 @@ export default function MdjTravelScreen() {
     })
     return () => sub.remove()
   }, [])
+
+  // Auto-start the MDJ voice guide MiniApp once the app list loads (so the
+  // glasses session activates and "היי מאיה" + story narration work). Runs
+  // once; skips if the guide is already running.
+  useEffect(() => {
+    if (guideStartedRef.current) return
+    const guide = Array.isArray(apps) ? apps.find((a: any) => a?.packageName === MDJ_GUIDE_PKG) : null
+    if (!guide) return // app list not loaded yet — effect re-runs when it updates
+    guideStartedRef.current = true
+    if (!guide.running) {
+      try {
+        startApplet(guide)
+      } catch (e) {
+        console.warn("[mdj] guide auto-start failed:", e)
+      }
+    }
+  }, [apps, startApplet])
 
   return (
     <SafeAreaView edges={["top"]} style={{flex: 1, backgroundColor: STATUS_BAR_BG}}>
