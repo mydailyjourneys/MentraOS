@@ -14,6 +14,8 @@ import {registerMdjPush, addMdjPushTapListener} from "@/effects/mdjPush"
 import {useAppStatusStore, useStart} from "@mentra/island"
 import BluetoothSdk from "@mentra/bluetooth-sdk"
 import {useGlassesStore, isGlassesConnected} from "@/stores/glasses"
+import {SETTINGS, useSetting} from "@/stores/settings"
+import {useNavigationStore} from "@/stores/navigation"
 
 // The MDJ voice guide MiniApp — auto-started in the background so "היי מאיה"
 // and story narration work while the traveler is in this WebView, without
@@ -43,6 +45,21 @@ export default function MdjTravelScreen() {
   // Live glasses connection state, so we can auto-connect the paired glasses.
   const glassesConnection = useGlassesStore((s: any) => s.connection)
   const connectTriedRef = useRef(false)
+
+  // Whether the user has ever paired glasses. If not, we skip ALL glasses
+  // logic (auto-connect, guide auto-start) so users without glasses are
+  // never bothered with connection attempts or "GLASSES REQUIRED" popups.
+  const [defaultWearable] = useSetting(SETTINGS.default_wearable.key)
+  const hasGlasses = !!defaultWearable
+
+  // Bridge: the web app's Settings posts "mdj:open-pairing" to start the
+  // one-time glasses pairing flow (MentraOS's proven /pairing flow).
+  const handleWebMessage = useCallback((event: any) => {
+    const data = event?.nativeEvent?.data
+    if (data === "mdj:open-pairing") {
+      useNavigationStore.getState().push("/pairing/select-glasses-model")
+    }
+  }, [])
 
   useFocusEffect(
     useCallback(() => {
@@ -74,6 +91,7 @@ export default function MdjTravelScreen() {
   // once; skips if the guide is already running.
   useEffect(() => {
     if (guideStartedRef.current) return
+    if (!hasGlasses) return // no glasses paired → don't start the guide
     const guide = Array.isArray(apps) ? apps.find((a: any) => a?.packageName === MDJ_GUIDE_PKG) : null
     if (!guide) return // app list not loaded yet — effect re-runs when it updates
     guideStartedRef.current = true
@@ -84,7 +102,7 @@ export default function MdjTravelScreen() {
         console.warn("[mdj] guide auto-start failed:", e)
       }
     }
-  }, [apps, startApplet])
+  }, [apps, startApplet, hasGlasses])
 
   // Auto-connect the paired glasses on launch. The fork skips Mentra's
   // connection screen, so without this the glasses never link to the app
@@ -92,6 +110,10 @@ export default function MdjTravelScreen() {
   // on its own first; if still not connected, trigger connectDefault() once.
   useEffect(() => {
     if (connectTriedRef.current) return
+    if (!hasGlasses) {
+      connectTriedRef.current = true
+      return // no glasses paired → never attempt to connect
+    }
     if (glassesConnection && isGlassesConnected(glassesConnection)) {
       connectTriedRef.current = true
       return
@@ -111,7 +133,7 @@ export default function MdjTravelScreen() {
       }
     }, 4000)
     return () => clearTimeout(t)
-  }, [glassesConnection])
+  }, [glassesConnection, hasGlasses])
 
   return (
     <SafeAreaView edges={["top"]} style={{flex: 1, backgroundColor: STATUS_BAR_BG}}>
@@ -132,6 +154,7 @@ export default function MdjTravelScreen() {
           mediaPlaybackRequiresUserAction={false}
           onLoadEnd={() => setLoading(false)}
           onNavigationStateChange={(s) => setCanGoBack(s.canGoBack)}
+          onMessage={handleWebMessage}
         />
         {loading && (
           <View

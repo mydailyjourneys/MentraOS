@@ -167,8 +167,10 @@ export const useNavigationStore = create<NavigationState>((set, get) => ({
     clearHistory()
     try {
       if (params?.transition) set({animation: params.transition})
-      router.replace({pathname: "/home" as any, params: params as any})
-      set({history: ["/home"], historyParams: [undefined]})
+      // MDJ: the travelers' app (/mdj) is "home" — so the post-pairing /
+      // onboarding flow lands back on the travel UI, not the Mentra home.
+      router.replace({pathname: "/mdj" as any, params: params as any})
+      set({history: ["/mdj"], historyParams: [undefined]})
     } catch (e) {
       console.error("NAV: clearHistoryAndGoHome() error", e)
     }
