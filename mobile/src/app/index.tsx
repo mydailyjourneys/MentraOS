@@ -9,6 +9,7 @@ import {useAuth} from "@/contexts/AuthContext"
 import {useDeeplink} from "@/contexts/DeeplinkContext"
 import {useAppTheme} from "@/contexts/ThemeContext"
 import {useNavigationStore} from "@/stores/navigation"
+import {mdjEnsureMentraSession, mdjNoteReroute} from "@/utils/auth/mdjMentraAuth"
 import {translate} from "@/i18n"
 import mantle from "@/services/MantleManager"
 import restComms from "@/services/RestComms"
@@ -92,8 +93,9 @@ export default function InitScreen() {
   const navigateToDestination = useCallback(async () => {
     console.log("INDEX: navigateToDestination()")
     if (!user?.email) {
+      // MDJ: fail open to the travel app instead of the MentraOS login.
       await new Promise((resolve) => setTimeout(resolve, NAVIGATION_DELAY))
-      replace("/auth/start", {transition: "fade"})
+      replace("/mdj", {transition: "fade"})
       return
     }
 
@@ -128,7 +130,17 @@ export default function InitScreen() {
 
   const checkLoggedIn = async (): Promise<void> => {
     if (!user) {
-      replaceAll("/auth/start")
+      // MDJ: never show the MentraOS login to the client. Try a silent
+      // background sign-in with this trip's hidden MentraOS account. If a
+      // session is established, re-run init once so the normal token-exchange
+      // path picks it up; otherwise just open the travel app (fully usable
+      // without glasses). Loop-guarded + fail-open.
+      const ok = await mdjEnsureMentraSession()
+      if (ok && mdjNoteReroute() <= 1) {
+        replaceAll("/")
+        return
+      }
+      replaceAll("/mdj")
       return
     }
     handleTokenExchange()
