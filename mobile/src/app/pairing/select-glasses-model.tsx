@@ -49,8 +49,8 @@ export default function SelectGlassesModelScreen() {
     }
   }
 
-  // Glasses models that should only be visible in super mode.
-  const SUPER_MODE_ONLY_MODELS = new Set<string>([DeviceTypes.NEX])
+  // MDJ: clients have a single model (filtered below), so the old super-mode
+  // model gating is no longer needed.
 
   // Platform-specific glasses options
   const glassesOptions =
@@ -95,7 +95,7 @@ export default function SelectGlassesModelScreen() {
       <ScrollView className="-mx-6 px-6 pt-6">
         <View className="flex-col gap-4 pb-8">
           {glassesOptions
-            .filter((glasses) => !SUPER_MODE_ONLY_MODELS.has(glasses.deviceModel) || superMode)
+            .filter((glasses) => glasses.deviceModel === DeviceTypes.LIVE || superMode)
             .map((glasses) => (
               <TouchableOpacity key={glasses.key} onPress={() => triggerGlassesPairingGuide(glasses.deviceModel)}>
                 <GlassView className="bg-primary-foreground flex-col items-center justify-center p-6 rounded-2xl overflow-hidden">
@@ -106,7 +106,7 @@ export default function SelectGlassesModelScreen() {
                         className="text-2xl text-foreground font-medium"
                         numberOfLines={1}
                         adjustsFontSizeToFit
-                        text={glasses.deviceModel}
+                        text={glasses.deviceModel === DeviceTypes.LIVE ? "MDJ Travel Glasses" : glasses.deviceModel}
                       />
                     </View>
                     <Image

@@ -12,10 +12,11 @@ import fr from "./fr"
 import hi from "./hi"
 import ja from "./ja"
 import ko from "./ko"
+import he from "./he"
 
 const systemLocales = Localization.getLocales()
 
-const resources = {ar, en, ko, es, fr, ja, hi}
+const resources = {ar, en, ko, es, fr, ja, hi, he}
 const supportedTags = Object.keys(resources)
 
 // Checks to see if the device locale matches any of the supported locales
@@ -34,8 +35,11 @@ const locale = pickSupportedLocale()
 export let isRTL = false
 
 // Need to set RTL ASAP to ensure the app is rendered correctly. Waiting for i18n to init is too late.
-if (locale?.languageTag && locale?.textDirection === "rtl") {
+// MDJ: the app is Hebrew-first, so force RTL even on non-RTL device locales.
+// (The `locale` check is kept so an RTL device locale is also honoured.)
+if (true || (locale?.languageTag && locale?.textDirection === "rtl")) {
   I18nManager.allowRTL(true)
+  I18nManager.forceRTL(true)
   isRTL = true
 } else {
   I18nManager.allowRTL(false)
@@ -47,7 +51,7 @@ export const initI18n = async () => {
   await i18n.init({
     resources,
     // lng: locale?.languageTag ?? fallbackLocale,
-    lng: "en", // TODO: setup a ci process for translating text
+    lng: "he", // MDJ: Hebrew-first app (falls back to en for untranslated keys)
     // This ensures we check the English language for missing keys
     fallbackLng: {
       default: ["en"],
