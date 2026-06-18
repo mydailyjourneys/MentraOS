@@ -153,6 +153,30 @@ const he = {
     stepCounter: "שלב {{index}} / {{total}}",
     confirmSkip: "כן, דלג",
   },
+  common: {
+    ...en.common,
+    success: "מחובר! 🎉",
+    skip: "דלג",
+    continue: "המשך",
+  },
+  versionCheck: {
+    ...en.versionCheck,
+    upToDateTitle: "הכול מעודכן",
+    upToDateDescription: "הכול מעודכן. חוזרים למסך הבית…",
+    upToDate: "מעודכן",
+  },
+  ota: {
+    ...en.ota,
+    checkingForUpdates: "בודק עדכונים",
+    upToDate: "הכול מעודכן",
+    noUpdatesAvailable: "המשקפיים מריצות את הגרסה העדכנית ביותר.",
+    checkFailed: "הבדיקה נכשלה",
+    checkFailedMessage: "לא ניתן לבדוק עדכונים כרגע. אפשר לנסות שוב מאוחר יותר מההגדרות.",
+    updateNow: "עדכנו עכשיו",
+    install: "התקנה",
+    setupWifi: "הגדרת Wi-Fi",
+    updateLater: "מאוחר יותר",
+  },
 }
 
 export default he
