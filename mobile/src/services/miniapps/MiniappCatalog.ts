@@ -154,11 +154,10 @@ class MiniappCatalog {
     if (!app.compatibility?.isCompatible) {
       const missingTypes = app.compatibility?.missingRequired?.map((req) => req.type) || []
       if (missingTypes.includes(HardwareType.EXIST)) {
-        await showAlert({
-          title: translate("home:glassesRequired"),
-          buttons: [{text: translate("common:ok")}],
-          message: translate("home:glassesRequiredMessage", {app: app.name}),
-        })
+        // MDJ (Maya 2026-06-18): suppress the jarring "Glasses Required" popup.
+        // It fired automatically (e.g. on the pairing-success screen) before the
+        // glasses connection had registered. We still don't start the app without
+        // glasses — it just starts silently once they connect, no popup.
         return false
       }
       const missingHardware =
