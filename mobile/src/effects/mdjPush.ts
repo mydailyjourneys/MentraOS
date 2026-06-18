@@ -82,7 +82,15 @@ export async function registerMdjPush(tripId: string): Promise<string | null> {
  */
 export function addMdjPushTapListener(onUrl: (url: string) => void) {
   return Notifications.addNotificationResponseReceivedListener((resp) => {
-    const data = resp.notification.request.content.data as {url?: string; place?: string} | undefined
+    const data = resp.notification.request.content.data as {url?: string; place?: string; cancelUrl?: string} | undefined
+    // Emergency cancel (Maya 2026-06-18): tapping the emergency notification
+    // within the 10s grace window calls the guide's cancel endpoint, so the
+    // alert email to Maya is NOT sent (handles an accidental trigger).
+    const cancelUrl = data?.cancelUrl ? String(data.cancelUrl) : ""
+    if (cancelUrl) {
+      fetch(cancelUrl, {method: "POST"}).catch(() => {})
+      return
+    }
     const place = data?.place ? String(data.place) : ""
     if (place) {
       const q = encodeURIComponent(place)
