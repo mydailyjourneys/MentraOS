@@ -15,7 +15,7 @@ import mantle from "@/services/MantleManager"
 import restComms from "@/services/RestComms"
 import socketComms from "@/services/SocketComms"
 import {SETTINGS, useSetting, useSettingsStore} from "@/stores/settings"
-import {SplashVideo} from "@/components/splash/SplashVideo"
+// SplashVideo (Mentra splash) removed — MDJ shows its own orange loading screen.
 import {APP_STORE_URL, PLAY_STORE_URL} from "@/constants/appConfig"
 import {BgTimer} from "@mentra/island"
 
@@ -330,10 +330,12 @@ export default function InitScreen() {
 
   // Render
   if (state === "loading") {
+    // MDJ: show only OUR loading background (orange) — no Mentra splash — so it
+    // blends seamlessly into the MDJ web app's own boot screen.
     return (
-      <Screen preset="fixed">
-        <SplashVideo colorOverride={superMode ? theme.colors.chart_4 : undefined} />
-      </Screen>
+      <View style={{flex: 1, backgroundColor: "#EC700B", alignItems: "center", justifyContent: "center"}}>
+        <ActivityIndicator size="large" color="#ffffff" />
+      </View>
     )
   }
 

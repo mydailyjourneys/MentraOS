@@ -234,14 +234,15 @@ module.exports = ({config}: ConfigContext): Partial<ExpoConfig> => {
       [
         "expo-splash-screen",
         {
-          image: "./assets/logo/logo_light.png",
-          resizeMode: "cover",
-          imageWidth: 100,
-          backgroundColor: "#fff",
+          // MDJ branding: globe on MDJ orange, matching the web app's boot
+          // screen so the client sees one continuous MDJ loading screen.
+          image: "./assets/app-icons/ic_launcher_foreground.png",
+          resizeMode: "contain",
+          imageWidth: 170,
+          backgroundColor: "#EC700B",
           dark: {
-            // backgroundColor: "#fff",
-            backgroundColor: "#171717",
-            image: "./assets/logo/logo_dark.png",
+            backgroundColor: "#EC700B",
+            image: "./assets/app-icons/ic_launcher_foreground.png",
           },
         },
       ],
