@@ -99,17 +99,10 @@ export default function InitScreen() {
       return
     }
 
-    // Read directly from the store so we see values that mantle.init() just
-    // loaded from the server, regardless of React render timing.
-    const store = useSettingsStore.getState()
-    const onboardingDone = store.getSetting(SETTINGS.onboarding_completed.key)
-    const wearable = store.getSetting(SETTINGS.default_wearable.key)
-
-    if (!onboardingDone && !wearable) {
-      await new Promise((resolve) => setTimeout(resolve, NAVIGATION_DELAY))
-      replace("/onboarding/welcome", {transition: "fade"})
-      return
-    }
+    // MDJ: skip the MentraOS onboarding / glasses-pairing flow at startup.
+    // The client logs into the travel app FIRST (inside /mdj). Glasses pairing
+    // happens later, on demand, from the "המשקפיים שלי" tab — so we never show
+    // a "connect glasses" screen before login. (Maya 2026-06-19)
 
     const pendingRoute = getPendingRoute()
     if (pendingRoute) {
