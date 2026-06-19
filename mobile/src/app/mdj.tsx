@@ -11,7 +11,7 @@ import {WebView} from "react-native-webview"
 import {SafeAreaView} from "react-native-safe-area-context"
 import {useFocusEffect} from "expo-router"
 import {registerMdjPush, addMdjPushTapListener} from "@/effects/mdjPush"
-import {useAppStatusStore, useStart} from "@mentra/island"
+import {useAppStatusStore, useStart, useStop} from "@mentra/island"
 import BluetoothSdk from "@mentra/bluetooth-sdk"
 import {useGlassesStore, isGlassesConnected} from "@/stores/glasses"
 import {SETTINGS, useSetting} from "@/stores/settings"
@@ -40,7 +40,7 @@ export default function MdjTravelScreen() {
   // auto-start the guide MiniApp in the background.
   const apps = useAppStatusStore((s: any) => s.apps)
   const startApplet = useStart()
-  const guideStartedRef = useRef(false)
+  const stopApplet = useStop()
 
   // Live glasses connection state, so we can auto-connect the paired glasses.
   const glassesConnection = useGlassesStore((s: any) => s.connection)
@@ -86,23 +86,37 @@ export default function MdjTravelScreen() {
     return () => sub.remove()
   }, [])
 
-  // Auto-start the MDJ voice guide MiniApp once the app list loads (so the
-  // glasses session activates and "היי מאיה" + story narration work). Runs
-  // once; skips if the guide is already running.
+  // GLASSES-ONLY guide lifecycle. The voice guide listens through a
+  // MICROPHONE, so it must run ONLY while the glasses are ACTUALLY CONNECTED —
+  // never merely "paired". Otherwise MentraOS falls back to the PHONE mic and
+  // the guide keeps a session open and listens 24/7 (a privacy problem, and
+  // the cause of the unprompted morning narration). So:
+  //   glasses connected    → start the guide (glasses mic + speaker drive it)
+  //   glasses disconnected  → stop the guide, so the phone mic/speaker are
+  //                           never used for background listening.
   useEffect(() => {
-    if (guideStartedRef.current) return
-    if (!hasGlasses) return // no glasses paired → don't start the guide
+    if (!hasGlasses) return // never paired → nothing to manage
     const guide = Array.isArray(apps) ? apps.find((a: any) => a?.packageName === MDJ_GUIDE_PKG) : null
     if (!guide) return // app list not loaded yet — effect re-runs when it updates
-    guideStartedRef.current = true
-    if (!guide.running) {
+    const connected = !!(glassesConnection && isGlassesConnected(glassesConnection))
+    if (connected) {
+      if (!guide.running) {
+        try {
+          startApplet(guide)
+        } catch (e) {
+          console.warn("[mdj] guide auto-start failed:", e)
+        }
+      }
+    } else if (guide.running) {
+      // Glasses not connected → ensure the guide is NOT running, so the phone
+      // mic is never used for continuous background listening.
       try {
-        startApplet(guide)
+        stopApplet(guide.packageName)
       } catch (e) {
-        console.warn("[mdj] guide auto-start failed:", e)
+        console.warn("[mdj] guide auto-stop failed:", e)
       }
     }
-  }, [apps, startApplet, hasGlasses])
+  }, [apps, glassesConnection, startApplet, stopApplet, hasGlasses])
 
   // Auto-connect the paired glasses on launch. The fork skips Mentra's
   // connection screen, so without this the glasses never link to the app
