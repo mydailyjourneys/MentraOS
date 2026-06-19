@@ -1,7 +1,8 @@
 // Hebrew locale for the MDJ build. Inherits the full English translation and
 // overrides the screens MDJ clients actually see (the glasses pairing flow)
 // with natural, plural/neutral Hebrew. Anything not overridden falls back to
-// English automatically. Maya 2026-06-18.
+// English automatically. "משקפיים" is a masculine dual noun, so it always
+// takes masculine agreement (חכמים, מחוברים, טעונים…). Maya 2026-06-19.
 import en from "./en"
 
 const he = {
@@ -12,13 +13,13 @@ const he = {
     pairingGuide: "מדריך חיבור",
     pairing: "מתחבר…",
     needMoreHelp: "צריכים עוד עזרה?",
-    glassesBooting: "המשקפיים מתחילות לפעול…",
-    simulatedGlassesDescription: "משקפיים מדומות מאפשרות להפעיל את האפליקציה גם בלי משקפיים פיזיות.",
+    glassesBooting: "המשקפיים מתחילים לפעול…",
+    simulatedGlassesDescription: "משקפיים מדומים מאפשרים להפעיל את האפליקציה גם בלי משקפיים פיזיים.",
     permissionRequired: "נדרשת הרשאה",
     bluetoothPermissionRequiredTitle: "נדרשת הרשאה",
     bluetoothPermissionRequiredMessage: "נדרשת הרשאת בלוטות' כדי להתחבר למשקפיים",
     bluetoothPermissionRequiredMessageAlt:
-      "נדרשת הרשאת בלוטות' כדי להתחבר למשקפיים החכמות.\n\nכדאי גם לוודא שהבלוטות' מופעל בהגדרות המכשיר.",
+      "נדרשת הרשאת בלוטות' כדי להתחבר למשקפיים החכמים.\n\nכדאי גם לוודא שהבלוטות' מופעל בהגדרות המכשיר.",
     errorTitle: "שגיאה",
     permissionsError: "בקשת ההרשאות הנדרשות נכשלה",
     connectionIssueTitle: "בעיית חיבור",
@@ -39,25 +40,25 @@ const he = {
     g1Ready: "המשיכו לחיבור",
     g1NotReady: "הנורה הכתומה מהבהבת",
     success: "הצליח!",
-    glassesConnected: "המשקפיים מחוברות.",
+    glassesConnected: "המשקפיים מחוברים.",
     needHelpPairing: "צריכים עזרה בחיבור?",
     btClassicConnected: "שמע המשקפיים חובר בהצלחה",
     btClassicDisconnected: "שמע המשקפיים נותק",
     btClassicDisconnectedMessage:
-      "המשקפיים מחוברות לאפליקציה, אך התקן השמע בבלוטות' אינו מחובר.",
+      "המשקפיים מחוברים לאפליקציה, אך התקן השמע בבלוטות' אינו מחובר.",
     powerOn: "הדלקה",
     poweredOn: "המשך",
   },
   pairingGuide: {
     ...en.pairingGuide,
-    mentraLivePreorder: "המשקפיים החכמות — חוו ראיית מחשב ישירות מהמשקפיים שלכם.",
+    mentraLivePreorder: "המשקפיים החכמים — חוו ראיית מחשב ישירות מהמשקפיים שלכם.",
   },
   pairingGuides: {
     ...en.pairingGuides,
     LIVE: {
       ...en.pairingGuides.LIVE,
-      step1: "ודאו שהמשקפיים טעונות במלואן ומופעלות.",
-      step2: "ודאו שהמשקפיים נמצאות במצב חיבור.",
+      step1: "ודאו שהמשקפיים טעונים במלואם ומופעלים.",
+      step2: "ודאו שהמשקפיים נמצאים במצב חיבור.",
       step3: "ודאו שאף אפליקציה אחרת אינה מחוברת כרגע למשקפיים.",
       step4: "נסו להפעיל מחדש את המשקפיים.",
       step5: "ודאו שהבלוטות' בטלפון מופעל.",
@@ -78,9 +79,9 @@ const he = {
   onboarding: {
     ...en.onboarding,
     phoneMode: "מצב טלפון",
-    phoneModeDescription: "מצב טלפון משתמש בטלפון במקום במשקפיים. תכונות המצלמה דורשות משקפיים אמיתיות.",
+    phoneModeDescription: "מצב טלפון משתמש בטלפון במקום במשקפיים. תכונות המצלמה דורשות משקפיים אמיתיים.",
     pleaseFollowSteps: "עקבו אחר השלבים כדי להמשיך.",
-    doYouHaveGlasses: "יש לכם משקפיים חכמות?",
+    doYouHaveGlasses: "יש לכם משקפיים חכמים?",
     getStarted: "בואו נתחיל",
     haveGlasses: "יש לי משקפיים",
     dontHaveGlasses: "אין לי עדיין משקפיים",
@@ -103,7 +104,7 @@ const he = {
     liveSwipeTouchpadUp: "החליקו קדימה כדי להגביר",
     liveSwipeTouchpadDown: "החליקו אחורה כדי להנמיך",
     liveConnectCable: "חיבור הכבל",
-    liveCableDescription: "הסירו את המשקפיים, חברו את הכבל, והרכיבו אותן בחזרה",
+    liveCableDescription: "הסירו את המשקפיים, חברו את הכבל, והרכיבו אותם בחזרה",
     liveCableInfo: "הכבל מאפשר להשתמש במשקפיים תוך כדי טעינה",
     liveEndTitle: "כל הכבוד!",
     liveEndMessage: "סיימתם! הגיע הזמן להתחיל להשתמש במשקפיים.",
@@ -111,13 +112,13 @@ const he = {
     liveWelcomeSubtitle: "לומדים את היסודות",
     livePowerOnTutorial: "לחצו והחזיקו את כפתור ההפעלה 5 שניות",
     livePowerOnInfo: "תשמעו \"Power on\"",
-    liveConnected: "המשקפיים מחוברות",
+    liveConnected: "המשקפיים מחוברים",
     liveEndOnboardingTitle: "לדלג על ההדרכה?",
     liveEndOnboardingMessage: "בטוחים שברצונכם לדלג על מדריכי ההדרכה?",
     osWelcomeTitle: "ברוכים הבאים",
     osWelcomeSubtitle: "לומדים להשתמש באפליקציות על המשקפיים",
     osEndTitle: "סיימתם!",
-    osEndSubtitle: "תיהנו מהמשקפיים החכמות",
+    osEndSubtitle: "תיהנו מהמשקפיים החכמים",
     osStartStopApps: "הפעלה ועצירה של אפליקציות",
     osStartStopAppsBullet1: "הקישו על אפליקציה לא פעילה כדי להפעיל אותה",
     osStartStopAppsBullet2: "הקישו על כפתור ה-X לצד אפליקציה כדי לעצור אותה",
@@ -146,7 +147,7 @@ const he = {
     btClassicTitle: "חיבור שמע",
     btClassicSubtitle: "חברו את {{name}} כהתקן שמע בבלוטות'",
     unpairEvenTitle: "ניתוק המשקפיים מאפליקציית Even",
-    unpairEvenSubtitle: "כדי להשתמש, שכחו את המשקפיים בהגדרות הבלוטות'. נתקו אותן ונסו שוב.",
+    unpairEvenSubtitle: "כדי להשתמש, שכחו את המשקפיים בהגדרות הבלוטות'. נתקו אותם ונסו שוב.",
     unpairEvenTryAgain: "נסו שוב",
     showDevicePicker: "הצגת בורר המכשירים",
     openSettings: "פתחו הגדרות",
@@ -169,7 +170,7 @@ const he = {
     ...en.ota,
     checkingForUpdates: "בודק עדכונים",
     upToDate: "הכול מעודכן",
-    noUpdatesAvailable: "המשקפיים מריצות את הגרסה העדכנית ביותר.",
+    noUpdatesAvailable: "המשקפיים מריצים את הגרסה העדכנית ביותר.",
     checkFailed: "הבדיקה נכשלה",
     checkFailedMessage: "לא ניתן לבדוק עדכונים כרגע. אפשר לנסות שוב מאוחר יותר מההגדרות.",
     updateNow: "עדכנו עכשיו",
