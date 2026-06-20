@@ -238,7 +238,7 @@ module.exports = ({config}: ConfigContext): Partial<ExpoConfig> => {
           // screen so the client sees one continuous MDJ loading screen.
           image: "./assets/app-icons/ic_launcher_foreground.png",
           resizeMode: "contain",
-          imageWidth: 235,
+          imageWidth: 270,
           backgroundColor: "#EC700B",
           dark: {
             backgroundColor: "#EC700B",
