@@ -155,6 +155,7 @@ const he = {
     confirmSkip: "כן, דלג",
   },
   common: {
+    cancel: "ביטול",
     ...en.common,
     success: "מחובר! 🎉",
     skip: "דלג",

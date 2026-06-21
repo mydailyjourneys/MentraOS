@@ -173,17 +173,18 @@ export default function SelectGlassesBluetoothScreen() {
                   let deviceName = filterDeviceName(res.name)
 
                   return (
-                    <View key={res.id} className="flex-row items-center justify-between px-4 py-3 bg-primary-foreground">
-                      <TouchableOpacity
-                        className="flex-1"
-                        onPress={() => triggerGlassesPairingGuide(res)}>
-                        <View className="flex-1 px-2.5 flex-col">
-                          <Text text={deviceModel} className="flex-wrap text-sm font-semibold" numberOfLines={2} />
-                          <Text text={deviceName} className="text-xs text-muted-foreground" numberOfLines={1} />
-                        </View>
-                      </TouchableOpacity>
-                      <Icon name="chevron-right" size={24} color={theme.colors.text} />
-                    </View>
+                    <TouchableOpacity
+                      key={res.id}
+                      onPress={() => triggerGlassesPairingGuide(res)}
+                      className="flex-row items-center justify-between px-4 py-4 my-2 rounded-2xl border-2 border-primary bg-primary-foreground">
+                      <View className="px-3.5 py-2 rounded-full bg-primary">
+                        <Text text="התחבר" className="text-sm font-bold text-white" />
+                      </View>
+                      <View className="flex-1 px-3 flex-col items-end">
+                        <Text text={deviceModel} className="flex-wrap text-base font-bold" numberOfLines={2} />
+                        <Text text={deviceName} className="text-xs text-muted-foreground" numberOfLines={1} />
+                      </View>
+                    </TouchableOpacity>
                   )
                 })}
               </Group>

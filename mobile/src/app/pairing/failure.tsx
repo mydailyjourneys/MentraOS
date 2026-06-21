@@ -71,7 +71,7 @@ export default function PairingFailureScreen() {
         {/* <View className="flex-row items-center mt-8">
           <Icon name="info-circle" size={16} color={theme.colors.textDim} />
           <Text
-            text="Make sure your glasses are powered on and in pairing mode"
+            text="ודאו שהמשקפיים דולקות ובמצב חיבור"
             preset="formHelper"
             className="ml-2 text-xs text-text-dim"
           />
