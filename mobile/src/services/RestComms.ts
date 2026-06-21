@@ -289,6 +289,19 @@ class RestComms {
     return res.map(() => undefined)
   }
 
+  public installApp(packageName: string): AsyncResult<void, Error> {
+    const config: RequestConfig = {
+      method: "POST",
+      endpoint: `/api/apps/install/${packageName}`,
+    }
+    interface Response {
+      success: boolean
+      data: any
+    }
+    const res = this.authenticatedRequest<Response>(config)
+    return res.map(() => undefined)
+  }
+
   // App Settings
   public getAppSettings(appName: string): AsyncResult<any, Error> {
     const config: RequestConfig = {

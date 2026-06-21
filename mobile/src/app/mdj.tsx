@@ -11,7 +11,8 @@ import {WebView} from "react-native-webview"
 import {SafeAreaView} from "react-native-safe-area-context"
 import {useFocusEffect} from "expo-router"
 import {registerMdjPush, addMdjPushTapListener} from "@/effects/mdjPush"
-import {useAppStatusStore, useStart, useStop} from "@mentra/island"
+import {useAppStatusStore, useStart, useStop, useRefresh} from "@mentra/island"
+import restComms from "@/services/RestComms"
 import BluetoothSdk from "@mentra/bluetooth-sdk"
 import {useGlassesStore, isGlassesConnected} from "@/stores/glasses"
 import {SETTINGS, useSetting} from "@/stores/settings"
@@ -41,6 +42,8 @@ export default function MdjTravelScreen() {
   const apps = useAppStatusStore((s: any) => s.apps)
   const startApplet = useStart()
   const stopApplet = useStop()
+  const refreshApplets = useRefresh()
+  const installTriedRef = useRef(false)
 
   // Live glasses connection state, so we can auto-connect the paired glasses.
   const glassesConnection = useGlassesStore((s: any) => s.connection)
@@ -96,9 +99,25 @@ export default function MdjTravelScreen() {
   //                           never used for background listening.
   useEffect(() => {
     if (!hasGlasses) return // never paired → nothing to manage
-    const guide = Array.isArray(apps) ? apps.find((a: any) => a?.packageName === MDJ_GUIDE_PKG) : null
-    if (!guide) return // app list not loaded yet — effect re-runs when it updates
     const connected = !!(glassesConnection && isGlassesConnected(glassesConnection))
+    const guide = Array.isArray(apps) ? apps.find((a: any) => a?.packageName === MDJ_GUIDE_PKG) : null
+    if (!guide) {
+      // Guide app not in this account yet (e.g. a fresh per-trip MentraOS
+      // account). Install it once so it appears in the list, then refresh;
+      // this effect re-runs and starts it.
+      if (connected && !installTriedRef.current) {
+        installTriedRef.current = true
+        ;(async () => {
+          try {
+            await restComms.installApp(MDJ_GUIDE_PKG)
+            refreshApplets()
+          } catch (e) {
+            console.warn("[mdj] guide install failed:", e)
+          }
+        })()
+      }
+      return
+    }
     if (connected) {
       if (!guide.running) {
         try {
@@ -116,7 +135,7 @@ export default function MdjTravelScreen() {
         console.warn("[mdj] guide auto-stop failed:", e)
       }
     }
-  }, [apps, glassesConnection, startApplet, stopApplet, hasGlasses])
+  }, [apps, glassesConnection, startApplet, stopApplet, refreshApplets, hasGlasses])
 
   // Auto-connect the paired glasses on launch. The fork skips Mentra's
   // connection screen, so without this the glasses never link to the app
