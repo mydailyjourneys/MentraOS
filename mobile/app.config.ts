@@ -154,7 +154,7 @@ module.exports = ({config}: ConfigContext): Partial<ExpoConfig> => {
       infoPlist: {
         NSCameraUsageDescription: "This app needs access to your camera to capture images.",
         NSMicrophoneUsageDescription:
-          "Mentra uses your microphone to enable the 'Hey Mira' AI assistant and provide live captions for deaf and hard-of-hearing users on smart glasses. For example, you can say 'Hey Mira, what's on my calendar today?' or the app can caption conversations in real-time on your glasses display.",
+          "MDJ Travel Guide uses your microphone for the 'Hey Maya' voice guide on your smart glasses. For example, while traveling you can say 'Hey Maya, what's on today's itinerary?' and hear the answer through your glasses.",
         NSBluetoothAlwaysUsageDescription: "This app needs access to your Bluetooth to connect to your glasses.",
         NSLocationWhenInUseUsageDescription:
           "Mentra uses your location to display nearby points of interest, weather updates, and navigation directions on your smart glasses. For example, when you're walking, the app can show restaurants within 100 meters or provide turn-by-turn directions to your destination on your glasses display.",
@@ -168,7 +168,7 @@ module.exports = ({config}: ConfigContext): Partial<ExpoConfig> => {
         NSPhotoLibraryUsageDescription:
           "This app needs access to your photo library to provide you with photo based information on your glasses.",
         NSPhotoLibraryAddUsageDescription:
-          "Allow Mentra to save photos and videos from your glasses to your camera roll.",
+          "Allow MDJ Travel Guide to save photos and videos from your glasses to your camera roll.",
         NSUserNotificationUsageDescription:
           "This app needs access to your notifications to provide you with notifications.",
         NSLocalNetworkUsageDescription:
@@ -226,8 +226,8 @@ module.exports = ({config}: ConfigContext): Partial<ExpoConfig> => {
       [
         "expo-media-library",
         {
-          photosPermission: "Allow Mentra to save photos from your glasses.",
-          savePhotosPermission: "Allow Mentra to save photos from your glasses.",
+          photosPermission: "Allow MDJ Travel Guide to save photos from your glasses.",
+          savePhotosPermission: "Allow MDJ Travel Guide to save photos from your glasses.",
           // Disabled - we save photos from glasses, we don't need to read EXIF location from user's library
           // Google Play rejects ACCESS_MEDIA_LOCATION for apps without core photo gallery functionality
           isAccessMediaLocationEnabled: false,
@@ -347,7 +347,7 @@ module.exports = ({config}: ConfigContext): Partial<ExpoConfig> => {
       [
         "expo-location",
         {
-          locationAlwaysAndWhenInUsePermission: "Allow Mentra to use your location.",
+          locationAlwaysAndWhenInUsePermission: "Allow MDJ Travel Guide to use your location.",
         },
       ],
       ...(variant.includeFirebase ? ["@react-native-firebase/app"] : []),
