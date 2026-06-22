@@ -102,11 +102,12 @@ module.exports = ({config}: ConfigContext): Partial<ExpoConfig> => {
       ...(variant.googleServicesFile ? {googleServicesFile: variant.googleServicesFile} : {}),
       versionCode: buildNumber,
       adaptiveIcon: {
-        // Globe as a full-bleed BACKGROUND so the round launcher mask shows the
-        // round globe filling the icon (like the MDJ Admin app), instead of a
-        // small/clipped foreground glyph. Foreground is transparent.
+        // Globe centered in the adaptive safe zone (~60% of the 108dp canvas) on
+        // a white background, so the round launcher mask shows the WHOLE globe
+        // without cropping its edges. A full-bleed background image (previous
+        // approach) filled the square and got clipped by the round mask.
         foregroundImage: "./assets/app-icons/ic_adaptive_fg.png",
-        backgroundImage: "./assets/app-icons/ic_adaptive_bg.png",
+        backgroundColor: "#FFFFFF",
       },
       allowBackup: false,
       permissions: [
