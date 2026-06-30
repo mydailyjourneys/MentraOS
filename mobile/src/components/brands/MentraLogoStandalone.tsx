@@ -11,7 +11,7 @@ interface LogoProps {
 // logo everywhere this component is used (pairing/onboarding headers, etc.).
 // resizeMode="contain" keeps the globe's 1:1 aspect inside whatever box the
 // caller asks for, so it never distorts. Maya 2026-06-18.
-export const MentraLogoStandalone: React.FC<LogoProps> = ({width = 33, height = 16}) => {
+export const MentraLogoStandalone: React.FC<LogoProps> = ({width = 56, height = 56}) => {
   return (
     <Image
       source={require("../../../assets/app-icons/ic_launcher_foreground.png")}
