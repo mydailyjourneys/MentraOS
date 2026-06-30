@@ -6,6 +6,7 @@ import {Button, Text} from "@/components/ignite"
 import {useAppTheme} from "@/contexts/ThemeContext"
 import {ThemedStyle} from "@/theme"
 import {getGlassesImage} from "@/utils/getGlassesImage"
+import i18n from "i18next"
 
 interface TroubleshootingModalProps {
   isVisible: boolean
@@ -20,93 +21,18 @@ export interface PairingTip {
 }
 
 export const getModelSpecificTips = (model: string): PairingTip[] => {
-  switch (model) {
-    case "Even Realities G1":
-      return [
-        {
-          title: "Fold Left Arm Before Right",
-          body: "Make sure you fold the G1's left arm before placing it in the case.",
-        },
-        {
-          title: "Plug In Your Case",
-          body: "Plug your G1 case into a charger during the pairing process.",
-        },
-        {
-          title: "Reset the Case",
-          body: "Try closing the charging case and opening it again.",
-        },
-        {
-          title: "Check Connected Apps",
-          body: "Ensure no other app is currently connected to your G1.",
-        },
-        {
-          title: "Restart Bluetooth",
-          body: "Restart your phone's Bluetooth and try pairing again.",
-        },
-        {
-          title: "Stay Close",
-          body: "Make sure your phone is within 3 feet of your glasses & case.",
-        },
-        {
-          title: "Unpair Previous Devices",
-          body: "If your glasses were previously paired to a different phone, you must unpair/forget the glasses in your phone's Bluetooth settings before retrying the pairing process.",
-        },
-      ]
-    case "Mentra Mach1":
-    case "Vuzix Z100":
-      return [
-        {
-          title: "Power On Your Glasses",
-          body: "Make sure your glasses are turned on.",
-        },
-        {
-          title: "Check Vuzix Connect",
-          body: "Check that your glasses are paired in the 'Vuzix Connect' app.",
-        },
-        {
-          title: "Reset Bluetooth",
-          body: "Try resetting your Bluetooth connection.",
-        },
-      ]
-    case "Mentra Live":
-      return [
-        {
-          title: "Charge Your Glasses",
-          body: "Make sure your Mentra Live is fully charged.",
-        },
-        {
-          title: "Pairing Mode",
-          body: "Check that your Mentra Live isn't already connected to another phone.",
-        },
-        {
-          title: "Restart Glasses",
-          body: "Try restarting your glasses.",
-        },
-        {
-          title: "Enable Bluetooth",
-          body: "Check that your phone's Bluetooth is enabled.",
-        },
-      ]
-    default:
-      return [
-        {
-          title: "Power On",
-          body: "Make sure your glasses are charged and turned on.",
-        },
-        {
-          title: "Disconnect Other Devices",
-          body: "Ensure no other device is connected to your glasses.",
-        },
-        {
-          title: "Restart Devices",
-          body: "Try restarting both your glasses and phone.",
-        },
-        {
-          title: "Stay Within Range",
-          body: "Make sure your phone is within range of your glasses.",
-        },
-      ]
-  }
+  // Tips are localized via i18n (the "troubleshooting" namespace). Hebrew lives
+  // in he.ts; any missing key falls back to en.ts automatically. This replaced
+  // the old hardcoded-English tips so the pairing-help slides show in Hebrew.
+  const key =
+    model === "Even Realities G1"
+      ? "g1"
+      : model === "Mentra Mach1" || model === "Vuzix Z100"
+        ? "vuzix"
+        : model === "Mentra Live"
+          ? "mentraLive"
+          : "default"
+  return i18n.t(`troubleshooting:${key}`, {returnObjects: true}) as PairingTip[]
 }
 
 const GlassesTroubleshootingModal: React.FC<TroubleshootingModalProps> = ({isVisible, onClose, deviceModel}) => {
@@ -195,14 +121,14 @@ const GlassesTroubleshootingModal: React.FC<TroubleshootingModalProps> = ({isVis
           <View style={themed($buttonContainer)}>
             <Button
               preset="secondary"
-              text="Back"
+              text={i18n.t("troubleshooting:back")}
               onPress={handleBack}
               style={themed($backButton)}
               disabled={currentIndex === 0}
             />
             <Button
               preset="primary"
-              text={currentIndex === tips.length - 1 ? "Done" : "Next"}
+              text={currentIndex === tips.length - 1 ? i18n.t("troubleshooting:done") : i18n.t("troubleshooting:next")}
               onPress={currentIndex === tips.length - 1 ? onClose : handleNext}
               style={themed($nextButton)}
             />

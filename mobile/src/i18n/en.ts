@@ -1,4 +1,35 @@
 const en = {
+  troubleshooting: {
+    back: "Back",
+    next: "Next",
+    done: "Done",
+    mentraLive: [
+      {title: "Charge Your Glasses", body: "Make sure your Mentra Live is fully charged."},
+      {title: "Pairing Mode", body: "Check that your Mentra Live isn't already connected to another phone."},
+      {title: "Restart Glasses", body: "Try restarting your glasses."},
+      {title: "Enable Bluetooth", body: "Check that your phone's Bluetooth is enabled."},
+    ],
+    default: [
+      {title: "Power On", body: "Make sure your glasses are charged and turned on."},
+      {title: "Disconnect Other Devices", body: "Ensure no other device is connected to your glasses."},
+      {title: "Restart Devices", body: "Try restarting both your glasses and phone."},
+      {title: "Stay Within Range", body: "Make sure your phone is within range of your glasses."},
+    ],
+    g1: [
+      {title: "Fold Left Arm Before Right", body: "Make sure you fold the G1's left arm before placing it in the case."},
+      {title: "Plug In Your Case", body: "Plug your G1 case into a charger during the pairing process."},
+      {title: "Reset the Case", body: "Try closing the charging case and opening it again."},
+      {title: "Check Connected Apps", body: "Ensure no other app is currently connected to your G1."},
+      {title: "Restart Bluetooth", body: "Restart your phone's Bluetooth and try pairing again."},
+      {title: "Stay Close", body: "Make sure your phone is within 3 feet of your glasses & case."},
+      {title: "Unpair Previous Devices", body: "If your glasses were previously paired to a different phone, you must unpair/forget the glasses in your phone's Bluetooth settings before retrying the pairing process."},
+    ],
+    vuzix: [
+      {title: "Power On Your Glasses", body: "Make sure your glasses are turned on."},
+      {title: "Check Vuzix Connect", body: "Check that your glasses are paired in the 'Vuzix Connect' app."},
+      {title: "Reset Bluetooth", body: "Try resetting your Bluetooth connection."},
+    ],
+  },
   deviceSettings: {
     title: "Device Settings",
     microphone: "Microphone",
