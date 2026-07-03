@@ -10,6 +10,7 @@ import CrustModule from "crust"
 
 import {asgCameraApi} from "@/services/asg/asgCameraApi"
 import {localStorageService} from "@/services/asg/localStorageService"
+import {mdjGalleryUploader} from "@/services/asg/mdjGalleryUploader"
 import {INVALID_DOWNLOADED_MEDIA, validateDownloadedMediaFile} from "@/services/asg/galleryMediaValidation"
 import {useGallerySyncStore} from "@/stores/gallerySync"
 import {BgTimer} from "@mentra/island"
@@ -290,6 +291,17 @@ class MediaProcessingQueue {
       await RNFS.unlink(filePathToSave).catch(() => {})
       throw metadataError
     }
+
+    // 7b. MDJ (Maya 2026-07-03): push the validated file to the MDJ glasses
+    // server → client's Drive folder → traveler-app album. Best-effort and
+    // fire-and-forget: album delivery must never block or fail the sync
+    // pipeline. Dedup + retry-on-next-sync live inside the uploader.
+    mdjGalleryUploader.enqueue({
+      id: item.id,
+      filePath: filePathToSave,
+      timestamp: item.timestamp,
+      isVideo,
+    })
 
     // S4: Clean up intermediate processing files
     const intermediates = [
