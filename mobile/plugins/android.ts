@@ -156,7 +156,11 @@ if (project.hasProperty("sentryUploadEnabled") && project.property("sentryUpload
     // 4a. Enable Core Library Desugaring (required by :crust → Google Nav SDK).
     if (!buildGradle.includes("coreLibraryDesugaringEnabled")) {
       buildGradle = buildGradle.replace(
-        /(namespace\s+['"]com\.mentra\.mentra['"])/,
+        // Anchor on ANY namespace value — the MDJ store variant builds as
+        // com.mydailyjourneys.app, and a package-specific anchor silently
+        // skipped this injection (store build failed on :crust desugaring,
+        // 2026-08-06).
+        /(namespace\s+['"][A-Za-z0-9_.]+['"])/,
         `$1
     compileOptions {
         coreLibraryDesugaringEnabled true
