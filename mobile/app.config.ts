@@ -30,9 +30,28 @@ const VARIANTS = {
     icon: "./assets/app-icons/ic_launcher.png",
     adaptiveIcon: "./assets/app-icons/ic_launcher_foreground.png",
   },
+  // MDJ store identity (Maya 2026-08-06): the ONLY identity we may publish
+  // under — com.mentra.mentra belongs to Mentra's own store listings.
+  // Selected via MDJ_STORE_BUILD=1. PERMANENT once uploaded to the stores.
+  // TODO before launch: register com.mydailyjourneys.app in Firebase console
+  // and flip includeFirebase to true (native push is disabled until then;
+  // the PWA web-push channel is unaffected).
+  mdj: {
+    appName: "MDJ Travel Guide",
+    packageName: "com.mydailyjourneys.app",
+    includeFirebase: false,
+    googleServicesFile: null,
+    googleServicesPlist: null,
+    icon: "./assets/app-icons/ic_launcher.png",
+    adaptiveIcon: "./assets/app-icons/ic_launcher_foreground.png",
+  },
 } as const
 
-const variant = process.env.EXPO_PUBLIC_DEPLOYMENT_REGION === "china" ? VARIANTS.cn : VARIANTS.default
+const variant = process.env.MDJ_STORE_BUILD
+  ? VARIANTS.mdj
+  : process.env.EXPO_PUBLIC_DEPLOYMENT_REGION === "china"
+    ? VARIANTS.cn
+    : VARIANTS.default
 
 /**
  * @param config ExpoConfig coming from the static config app.json if it exists
